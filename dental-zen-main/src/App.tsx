@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import ClinicPulse from "./pages/ClinicPulse";
 import NotFound from "./pages/NotFound";
 import SkeletonLoader from "./components/SkeletonLoader";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Admin imports
 import AdminLayout from "./components/admin/layout/AdminLayout";
@@ -20,60 +21,73 @@ const Services = lazy(() => import("./pages/admin/Services"));
 const Analytics = lazy(() => import("./pages/admin/Analytics"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/clinic-pulse" element={<ClinicPulse />} />
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/clinic-pulse" element={<ClinicPulse />} />
 
-          {/* Admin routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Dashboard />
-              </Suspense>
-            } />
-            <Route path="appointments" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Appointments />
-              </Suspense>
-            } />
-            <Route path="patients" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Patients />
-              </Suspense>
-            } />
-            <Route path="services" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Services />
-              </Suspense>
-            } />
-            <Route path="analytics" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Analytics />
-              </Suspense>
-            } />
-            <Route path="settings" element={
-              <Suspense fallback={<SkeletonLoader />}>
-                <Settings />
-              </Suspense>
-            } />
-          </Route>
+            {/* Admin routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="dashboard" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Dashboard />
+                </Suspense>
+              } />
+              <Route path="appointments" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Appointments />
+                </Suspense>
+              } />
+              <Route path="patients" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Patients />
+                </Suspense>
+              } />
+              <Route path="services" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Services />
+                </Suspense>
+              } />
+              <Route path="analytics" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Analytics />
+                </Suspense>
+              } />
+              <Route path="settings" element={
+                <Suspense fallback={<SkeletonLoader />}>
+                  <Settings />
+                </Suspense>
+              } />
+            </Route>
 
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
