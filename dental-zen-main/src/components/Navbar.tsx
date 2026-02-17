@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Calendar } from "lucide-react";
 
@@ -13,12 +13,13 @@ const Navbar = ({ onBook }: { onBook?: () => void }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
+  // Memoize sections array to avoid recalculating on every scroll
+  const sections = useMemo(() => navLinks.map(link => link.href.substring(1)), []);
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      // Detect active section
-      const sections = navLinks.map(link => link.href.substring(1));
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -33,7 +34,7 @@ const Navbar = ({ onBook }: { onBook?: () => void }) => {
 
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [sections]);
 
   return (
     <motion.header

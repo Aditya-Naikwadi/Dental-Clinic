@@ -1,15 +1,28 @@
 import { motion } from "framer-motion";
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, Search, User, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 
-const Header = () => {
+interface HeaderProps {
+    onMenuClick?: () => void;
+}
+
+const Header = ({ onMenuClick }: HeaderProps) => {
     const [showUserMenu, setShowUserMenu] = useState(false);
 
     return (
-        <header className="glass-card border-b border-border px-6 py-4">
+        <header className="glass-card border-b border-border px-4 sm:px-6 py-4">
             <div className="flex items-center justify-between">
-                {/* Search */}
-                <div className="flex-1 max-w-md">
+                {/* Mobile menu button */}
+                <button
+                    onClick={onMenuClick}
+                    className="lg:hidden flex items-center justify-center h-10 w-10 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
+                    aria-label="Open navigation menu"
+                >
+                    <Menu className="h-5 w-5" />
+                </button>
+
+                {/* Search - hide on mobile */}
+                <div className="flex-1 max-w-md hidden sm:block">
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <input
@@ -21,7 +34,7 @@ const Header = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                     {/* Notifications */}
                     <motion.button
                         className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-muted/80 transition-colors"

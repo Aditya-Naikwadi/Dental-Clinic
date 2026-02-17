@@ -25,7 +25,7 @@ const Hero = ({ onBook }: { onBook?: () => void }) => {
   const highlightText = "Managed by Intelligence";
 
   return (
-    <section ref={ref} className="relative min-h-screen overflow-hidden bg-hero-gradient">
+    <section ref={ref} className="relative min-h-[80vh] sm:min-h-screen overflow-hidden bg-hero-gradient">
       {/* Background image with parallax */}
       <motion.div className="absolute inset-0" style={{ y }}>
         <img
@@ -58,7 +58,7 @@ const Hero = ({ onBook }: { onBook?: () => void }) => {
             <span className="text-sm font-medium text-secondary">AI-Powered Dental Care</span>
           </motion.div>
 
-          <h1 className="text-4xl font-bold leading-tight text-primary-foreground md:text-5xl lg:text-6xl xl:text-7xl">
+          <h1 className="text-3xl font-bold leading-tight text-primary-foreground sm:text-4xl md:text-5xl lg:text-6xl">
             {headlineWords.map((word, i) => (
               <motion.span
                 key={i}

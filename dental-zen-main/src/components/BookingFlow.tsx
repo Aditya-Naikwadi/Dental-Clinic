@@ -5,26 +5,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   X, Check, ChevronRight, ChevronLeft, CalendarIcon,
-  Smile, ScanLine, Sparkles, Heart, Shield, Zap, Trophy, Star,
+  Sparkles, Heart, Trophy, Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
-
-const services = [
-  { id: "cosmetic", icon: Smile, title: "Cosmetic Dentistry", price: "From $299" },
-  { id: "diagnostics", icon: ScanLine, title: "AI Diagnostics", price: "From $149" },
-  { id: "whitening", icon: Sparkles, title: "Teeth Whitening", price: "From $199" },
-  { id: "pediatric", icon: Heart, title: "Pediatric Care", price: "From $99" },
-  { id: "implants", icon: Shield, title: "Dental Implants", price: "From $999" },
-  { id: "emergency", icon: Zap, title: "Emergency Care", price: "From $249" },
-];
-
-const timeSlots = [
-  "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
-  "11:00 AM", "11:30 AM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM",
-  "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM",
-];
+import { SERVICES, TIME_SLOTS } from "@/constants/services";
+import { VALIDATION } from "@/constants/validation";
 
 const steps = [
   { label: "Service", icon: Sparkles },
@@ -54,7 +41,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
   const canNext = () => {
     if (step === 0) return !!selectedService;
     if (step === 1) return !!selectedDate && !!selectedTime;
-    if (step === 2) return name.trim().length > 0 && phone.trim().length >= 7 && email.includes("@");
+    if (step === 2) return name.trim().length > 0 && phone.trim().length >= VALIDATION.MIN_PHONE_LENGTH && VALIDATION.EMAIL_REGEX.test(email);
     return true;
   };
 
@@ -110,7 +97,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
     }, 800);
   };
 
-  const selectedServiceData = services.find((s) => s.id === selectedService);
+  const selectedServiceData = SERVICES.find((s) => s.id === selectedService);
 
 
   return (
@@ -201,7 +188,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                     className="space-y-3"
                   >
                     <p className="text-sm text-muted-foreground mb-4">Select the service you're interested in:</p>
-                    {services.map((s) => (
+                    {SERVICES.map((s) => (
                       <button
                         key={s.id}
                         onClick={() => setSelectedService(s.id)}
@@ -274,7 +261,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                         <p className="text-sm font-medium text-foreground mb-2">Select a time:</p>
                         <div className="grid grid-cols-3 gap-2">
-                          {timeSlots.map((t) => (
+                          {TIME_SLOTS.map((t) => (
                             <button
                               key={t}
                               onClick={() => setSelectedTime(t)}
@@ -308,7 +295,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                       <label className="mb-1 block text-sm font-medium text-foreground">Full Name *</label>
                       <input
                         value={name}
-                        onChange={(e) => setName(e.target.value.slice(0, 100))}
+                        onChange={(e) => setName(e.target.value.slice(0, VALIDATION.MAX_NAME_LENGTH))}
                         placeholder="John Doe"
                         className="w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none transition-colors"
                       />
@@ -317,7 +304,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                       <label className="mb-1 block text-sm font-medium text-foreground">Phone Number *</label>
                       <input
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/[^0-9+\-() ]/g, "").slice(0, 20))}
+                        onChange={(e) => setPhone(e.target.value.replace(/[^0-9+\-() ]/g, "").slice(0, VALIDATION.MAX_PHONE_LENGTH))}
                         placeholder="(123) 456-7890"
                         className="w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none transition-colors"
                       />
@@ -326,7 +313,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                       <label className="mb-1 block text-sm font-medium text-foreground">Email Address *</label>
                       <input
                         value={email}
-                        onChange={(e) => setEmail(e.target.value.slice(0, 255))}
+                        onChange={(e) => setEmail(e.target.value.slice(0, VALIDATION.MAX_EMAIL_LENGTH))}
                         type="email"
                         placeholder="john@example.com"
                         className="w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none transition-colors"
@@ -336,7 +323,7 @@ const BookingFlow = ({ open, onClose }: BookingFlowProps) => {
                       <label className="mb-1 block text-sm font-medium text-foreground">Notes (optional)</label>
                       <textarea
                         value={notes}
-                        onChange={(e) => setNotes(e.target.value.slice(0, 500))}
+                        onChange={(e) => setNotes(e.target.value.slice(0, VALIDATION.MAX_NOTES_LENGTH))}
                         rows={3}
                         placeholder="Any concerns or special requests..."
                         className="w-full rounded-xl border-2 border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none transition-colors resize-none"

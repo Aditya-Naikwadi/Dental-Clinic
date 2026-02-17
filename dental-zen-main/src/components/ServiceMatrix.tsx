@@ -1,57 +1,9 @@
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import {
-  Smile,
-  ScanLine,
-  Sparkles,
-  Heart,
-  Shield,
-  Zap,
-} from "lucide-react";
-
-const services = [
-  {
-    icon: Smile,
-    title: "Cosmetic Dentistry",
-    description: "Veneers, whitening & smile makeovers",
-    why: "A confident smile increases self-esteem by 80% and opens professional doors. Our AI-matched color grading ensures the most natural results.",
-    tag: "Most Popular",
-  },
-  {
-    icon: ScanLine,
-    title: "AI Diagnostics",
-    description: "3D scanning & predictive analysis",
-    why: "Our AI detects early-stage issues 3x faster than traditional methods, catching problems before they become painful and expensive.",
-  },
-  {
-    icon: Sparkles,
-    title: "Teeth Whitening",
-    description: "Professional laser whitening in 45 min",
-    why: "Clinical-grade whitening delivers 8 shades brighter results compared to 2 shades with over-the-counter products.",
-  },
-  {
-    icon: Heart,
-    title: "Pediatric Care",
-    description: "Gentle care for your little ones",
-    why: "Children who have positive dental experiences early are 60% more likely to maintain good oral health habits throughout life.",
-  },
-  {
-    icon: Shield,
-    title: "Dental Implants",
-    description: "Permanent, natural-looking replacements",
-    why: "Modern implants have a 98% success rate and can last a lifetime with proper care — the gold standard in tooth replacement.",
-    tag: "VIP",
-  },
-  {
-    icon: Zap,
-    title: "Emergency Care",
-    description: "24/7 urgent dental support",
-    why: "60% of dental emergencies worsen within 24 hours. Our same-day emergency protocol prevents complications and reduces pain faster.",
-  },
-];
+import { SERVICES, Service } from "@/constants/services";
 
 interface ServiceCardProps {
-  service: typeof services[0];
+  service: Service;
   index: number;
   hoveredIndex: number | null;
   setHoveredIndex: (index: number | null) => void;
@@ -105,8 +57,8 @@ const ServiceCard = ({ service, index, hoveredIndex, setHoveredIndex }: ServiceC
       {service.tag && (
         <motion.span
           className={`absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-bold ${service.tag === "VIP"
-              ? "bg-accent/10 text-accent"
-              : "bg-secondary/10 text-secondary"
+            ? "bg-accent/10 text-accent"
+            : "bg-secondary/10 text-secondary"
             }`}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -182,7 +134,7 @@ const ServiceMatrix = () => {
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" style={{ perspective: "1000px" }}>
-          {services.map((service, i) => (
+          {SERVICES.map((service, i) => (
             <ServiceCard
               key={service.title}
               service={service}

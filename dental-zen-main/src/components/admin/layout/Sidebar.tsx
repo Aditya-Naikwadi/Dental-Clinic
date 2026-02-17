@@ -21,7 +21,11 @@ const menuItems = [
     { icon: Settings, label: "Settings", path: "/admin/settings" },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+    onNavigate?: () => void;
+}
+
+const Sidebar = ({ onNavigate }: SidebarProps) => {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
 
@@ -63,11 +67,11 @@ const Sidebar = () => {
                     const Icon = item.icon;
 
                     return (
-                        <Link key={item.path} to={item.path}>
+                        <Link key={item.path} to={item.path} onClick={onNavigate}>
                             <motion.div
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive
-                                        ? "bg-secondary text-secondary-foreground"
-                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    ? "bg-secondary text-secondary-foreground"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                     }`}
                                 whileHover={{ x: 4 }}
                                 whileTap={{ scale: 0.98 }}
